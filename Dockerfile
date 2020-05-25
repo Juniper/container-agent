@@ -1,12 +1,18 @@
 FROM ruby:2.2.5
 
-ARG version="3.7.3"
+LABEL maintainer = "Jnpr-community-netdev <jnpr-community-netdev@juniper.net>"
 
-ENV PUPPET_AGENT_VERSION="$version"
+LABEL version="1.0"
+
+ENV PUPPET_AGENT_VERSION="3.7.3"
+
+RUN apt-get update \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /etc/puppet
 
 WORKDIR /puppet-agent
-
-RUN apt-get update && apt-get install vim -y && mkdir /etc/puppet
 
 COPY bin/Gemfile ./
 
@@ -21,6 +27,4 @@ COPY bin/transaction.rb /usr/local/bundle/gems/puppet-3.7.3/lib/puppet/transacti
 
 COPY bin/startup.sh /
 
-RUN ["chmod", "+x", "/startup.sh"]
-
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["/bin/bash", "-e", "/startup.sh"]
