@@ -24,9 +24,9 @@ The docker container will contain the following gems and their dependencies:
 ### 2. To start the container
 
 ```shell
-[vrf:none] root@host-device:~#docker run --rm -d --network=host --cap-add=NET_ADMIN --mount source=jnet,destination=/usr/evo --env-file=/run/docker-vrf0/jnet.env -e PATH="/usr/local/bundle/bin:$PATH" -e NETCONF_USER=USER_HERE --name=puppet-agent shekarmekala/puppet-agent:latest
-Unable to find image 'shekarmekala/puppet-agent:latest' locally
-latest: Pulling from shekarmekala/puppet-agent
+[vrf:none] root@host-device:~#docker run --rm -d --network=host --cap-add=NET_ADMIN --mount source=jnet,destination=/usr/evo --env-file=/run/docker-vrf0/jnet.env -e PATH="/usr/local/bundle/bin:$PATH" -e NETCONF_USER=USER_HERE --name=puppet-agent Juniper/puppet-agent:latest
+Unable to find image 'Juniper/puppet-agent:latest' locally
+latest: Pulling from Juniper/puppet-agent
 a20850499053: Pull complete
 45fafcc4d947: Pull complete
 43cb0e5bcce7: Pull complete
@@ -45,7 +45,7 @@ beb877dceff1: Pull complete
 baf690409398: Pull complete
 7bb7d69f2608: Pull complete
 Digest: sha256:7a49eb39c5d69964dc14c39d65e05610eabff850bf09fa1a2f2ce9d87c0377ee
-Status: Downloaded newer image for shekarmekala/puppet-agent:latest
+Status: Downloaded newer image for Juniper/puppet-agent:latest
 root@host-device:/puppet-agent#
 ```
 
