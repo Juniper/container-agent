@@ -1,4 +1,4 @@
-FROM ruby:2.2.5
+FROM ruby:2.3.0
 
 LABEL maintainer = "Jnpr-community-netdev <jnpr-community-netdev@juniper.net>"
 
@@ -6,17 +6,27 @@ LABEL version="1.0"
 
 ENV PUPPET_AGENT_VERSION="3.7.3"
 
-RUN apt-get update \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ENV VERSION "1.1"
 
-RUN mkdir /etc/puppet
+ENV NAME "jpuppet-agent"
 
 WORKDIR /puppet-agent
 
 COPY bin/Gemfile ./
 
+RUN mkdir /etc/puppet
+
 COPY bin/puppet.conf /etc/puppet/
+
+RUN apt-get update \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN gem uninstall -i /usr/local/lib/ruby/gems/2.3.0 bundler
+
+RUN gem install bundler -v "< 2.0"
+
+RUN gem install bundle -v "< 2.0"
 
 RUN bundle install
 
