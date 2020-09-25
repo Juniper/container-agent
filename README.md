@@ -2,7 +2,7 @@
 
 Puppet-agent is natively installed on Junos Evolved. The container is intended to replace
 native puppet-agent installation. Thus, giving the user power to mount or unmount the package
-on demand. The container is currently based out of a ruby-2.2.5 base image.
+on demand. The container is currently based out of a ruby-2.3.0 base image.
 
 ## Image contents
 
