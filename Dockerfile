@@ -1,16 +1,32 @@
-FROM ruby:2.2.5
+FROM ruby:2.3.0
 
-ARG version="3.7.3"
+LABEL maintainer = "Jnpr-community-netdev <jnpr-community-netdev@juniper.net>"
 
-ENV PUPPET_AGENT_VERSION="$version"
+LABEL version="1.0"
+
+ENV PUPPET_AGENT_VERSION="3.7.3"
+
+ENV VERSION "1.1"
+
+ENV NAME "jpuppet-agent"
 
 WORKDIR /puppet-agent
 
-RUN apt-get update && apt-get install vim -y && mkdir /etc/puppet
-
 COPY bin/Gemfile ./
 
+RUN mkdir /etc/puppet
+
 COPY bin/puppet.conf /etc/puppet/
+
+RUN apt-get update \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN gem uninstall -i /usr/local/lib/ruby/gems/2.3.0 bundler
+
+RUN gem install bundler -v "< 2.0"
+
+RUN gem install bundle -v "< 2.0"
 
 RUN bundle install
 
@@ -21,6 +37,4 @@ COPY bin/transaction.rb /usr/local/bundle/gems/puppet-3.7.3/lib/puppet/transacti
 
 COPY bin/startup.sh /
 
-RUN ["chmod", "+x", "/startup.sh"]
-
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["/bin/bash", "-e", "/startup.sh"]
