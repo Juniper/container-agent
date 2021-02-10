@@ -12,11 +12,11 @@ ENV NAME "jpuppet-agent"
 
 WORKDIR /puppet-agent
 
-COPY bin/Gemfile ./
+COPY puppet-agent/Gemfile ./
 
 RUN mkdir /etc/puppet
 
-COPY bin/puppet.conf /etc/puppet/
+COPY puppet-agent/puppet.conf /etc/puppet/
 
 RUN apt-get update \
  && apt-get clean \
@@ -33,8 +33,8 @@ RUN bundle install
 RUN sed -i '/YAML_ENGINE = defined?(YAML::ENGINE) ? YAML::ENGINE.yamler : "syck"/c\  YAML_ENGINE = defined?(YAML::ENGINE) ? YAML::ENGINE.yamler : (defined?(Psych) && YAML == Psych ? "psych" : "syck")' \
     /usr/local/bundle/gems/puppet-3.7.3/lib/puppet/vendor/safe_yaml/lib/safe_yaml.rb
 
-COPY bin/transaction.rb /usr/local/bundle/gems/puppet-3.7.3/lib/puppet/transaction.rb
+COPY puppet-agent/transaction.rb /usr/local/bundle/gems/puppet-3.7.3/lib/puppet/transaction.rb
 
-COPY bin/startup.sh /
+COPY puppet-agent/startup.sh /
 
 ENTRYPOINT ["/bin/bash", "-e", "/startup.sh"]
