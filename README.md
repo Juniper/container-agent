@@ -1,4 +1,6 @@
-# Puppet-agent container for devices running Junos Evolved
+# Agent container for devices running Junos Evolved
+
+## Puppet agent
 
 Puppet-agent is natively installed on Junos Evolved. The container is intended to replace
 native puppet-agent installation. Thus, giving the user power to mount or unmount the package
@@ -170,3 +172,40 @@ puppet-master#
 ```
 
 Now the container is authenticated and ready to be used as the puppet agent for the host device.
+
+## Chef Agent
+
+Chef-agent is natively installed on Junos Evolved. The container is intended to replace
+native chef-agent installation. Thus, giving the user power to mount or unmount the package
+on demand. The container is currently based out of a ruby-2.3.0 base image.
+
+### 1. Commands to build the container image
+
+```bash
+cd chef-client
+docker build .
+```
+
+### 2. To start the chef-client container please use
+
+```bash
+docker run -d --rm --name=chef-client --mount source=jnet,destination=/usr/evo,readonly --env-file /run/docker/jnet/jnet.env -e PATH="/usr/local/bundle/bin:$PATH" -e NETCONF_USER=USER_HERE --network=host --cap-add=NET_ADMIN Juniper/chef-client:latest
+```
+
+### 3. Setup instructions
+
+* Change the username to the desired username
+
+* Chef-client will establish a `NETCONF` session with the `localhost`. User will have to run the following commands to establish a password-less connection with host device.
+
+* Generate SSH-Keys:
+
+`docker exec -it chef-client ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa`
+
+* Copy the public key from container:
+
+`docker cp CONTAINER_ID:/root/.ssh/id_rsa.pub .`
+
+* Add the key to `authorized_keys`:
+
+`cat ~/.ssh/id_rsa.pub >> authorized_keys`
